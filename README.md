@@ -9,14 +9,22 @@ In addition, **installation guides** can provide step-by-step instructions on ho
 
 It's essential to have a well-documented and organized guide when it comes to programming setups and installations. A clear, concise, and well-structured guide can help reduce errors, save time, and make the process much smoother for beginners and professionals alike. With the right guides and tweaks, programming can be a more manageable and enjoyable experience.
 
-- [dotenv-all-database-configuration.md](./dotenv-all-database-configuration.md)
-- [git-with-proxy-mobile-hotspot.md](./git-with-proxy-mobile-hotspot.md)
-- [laravel-blade-crud-setup.md](./laravel-blade-crud-setup.md)
-- [laravel-vue-inertia-initial-and-project-setup.md](./laravel-vue-inertia-initial-and-project-setup.md)
-- [laravel-vue-inertial-crud-implementation-basics.md](./laravel-vue-inertial-crud-implementation-basics.md)
-- [laravel-workflow-project-creation.md](./laravel-workflow-project-creation.md)
-- [mongodb-authentication-create-administrator-account.md](./mongodb-authentication-create-administrator-account.md)
-- [python-all-database-connection-setup.md](./python-all-database-connection-setup.md)
-- [vps-cmd-setup-node-mongodb.md](./vps-cmd-setup-node-mongodb.md)
+<center>
+
+| Category | FileName |
+| --- | --- |
+| Git and Version Control | [git-with-proxy-mobile-hotspot.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/git-with-proxy-mobile-hotspot.md) |
+| Laravel |  |
+|  | [laravel-workflow-project-creation.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-workflow-project-creation.md) |
+|  | [laravel-blade-crud-setup.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-blade-crud-setup.md) |
+|  | [laravel-vue-inertia-initial-and-project-setup.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-vue-inertia-initial-and-project-setup.md) |
+|  | [laravel-vue-inertial-crud-implementation-basics.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-vue-inertial-crud-implementation-basics.md) |
+| Databases |  |
+|  | [python-all-database-connection-setup.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/python-all-database-connection-setup.md) |
+|  | [dotenv-all-database-configuration.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/dotenv-all-database-configuration.md) |
+| MongoDB | [mongodb-authentication-create-administrator-account.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/mongodb-authentication-create-administrator-account.md) |
+| VPS |  |
+|  | [vps-cmd-setup-node-mongodb.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/vps-cmd-setup-node-mongodb.md) |
 
 
+</center>
