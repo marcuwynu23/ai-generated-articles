@@ -5,7 +5,6 @@ import mysql.connector
 cnx = mysql.connector.connect(user='root', password='',
                               host='localhost',
                               database='test')
-
 cursor = cnx.cursor()
 cursor.execute("""""")
 
