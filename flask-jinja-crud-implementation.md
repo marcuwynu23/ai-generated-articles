@@ -6,9 +6,9 @@ Flask is a micro web framework written in Python that provides a simple and flex
 
 Before we get started, make sure you have the following installed on your system:
 
-- Python 3.x
-- Flask
-- Jinja
+- **Python 3.x**
+- **Flask**
+- **Jinja**
 
 ## Step 1: Creating a Database
 
@@ -20,7 +20,6 @@ CREATE TABLE users (
     name TEXT NOT NULL,
     email TEXT NOT NULL
 );
-
 ```
 
 ## Step 2: Creating the Flask App
@@ -96,16 +95,15 @@ def delete(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 ```
 
 Here, we have created a new Flask app and defined five routes:
 
 - /: This route displays a list of all the users in the database.
 - /new: This route displays a form to create a new user. When the form is submitted, a new user is created in the database and the user is redirected to the home page.
-- /edit/<int:id>: This route displays a form to edit an existing user. When the form is submitted, the user's details are updated in the database and the user is redirected to the show page for that user.
-- /show/<int:id>: This route displays the details of a single user.
-- /delete/<int:id>: This route deletes a user from the database and redirects to the home page.
+- /edit/[int:id](int:id): This route displays a form to edit an existing user. When the form is submitted, the user's details are updated in the database and the user is redirected to the show page for that user.
+- /show/[int:id](int:id): This route displays the details of a single user.
+- /delete/[int:id](int:id): This route deletes a user from the database and redirects to the home page.
   We have also defined a db variable which stores the path to the database file.
 
 ## Step 3: Creating the Templates
@@ -340,7 +338,6 @@ def delete(id):
 
     # Redirect to the home page
     return redirect(url_for('index'))
-
 ```
 
 This route handles the deletion of a user from the database. It first connects to the database, then uses a DELETE statement to remove the user with the specified id from the users table. It then commits the transaction and closes the database connection. Finally, it redirects the user to the home page.
