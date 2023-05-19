@@ -47,8 +47,8 @@ return render_template('dashboard.html')
 
 Flask-JWT is another popular extension for implementing authentication in Flask. It provides JSON Web Token (JWT) authentication, which is a stateless authentication mechanism that does not require storing user sessions on the server.
 
-<br>
-``` python
+```python
+
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
 app = Flask(name)
