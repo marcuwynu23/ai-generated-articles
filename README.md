@@ -1,5 +1,12 @@
+<div align="center">
+  <h1>Programming Setups, Installation, and Guides</h1>
+</div>
 
-# Programming Setups, Installation, and Guides
+<p align="center">
+  <img src="https://img.shields.io/github/stars/marcuwynu23/programming-and-setup-notes.svg" alt="Stars Badge"/>
+  <img src="https://img.shields.io/github/forks/marcuwynu23/programming-and-setup-notes.svg" alt="Forks Badge"/>
+  <img src="https://img.shields.io/github/issues/marcuwynu23/programming-and-setup-notes.svg" alt="Issues Badge"/>
+</p>
 
 Programming can be a challenging task, especially when it comes to setting up a programming environment and installing the necessary tools and libraries. For beginners, this can be a daunting task, but *guides and tweaks* can be helpful in easing the process.
 
@@ -9,22 +16,17 @@ In addition, **installation guides** can provide step-by-step instructions on ho
 
 It's essential to have a well-documented and organized guide when it comes to programming setups and installations. A clear, concise, and well-structured guide can help reduce errors, save time, and make the process much smoother for beginners and professionals alike. With the right guides and tweaks, programming can be a more manageable and enjoyable experience.
 
-<center>
+## 📚 Contents
 
-| Category | FileName |
-| --- | --- |
-| Git and Version Control | [git-with-proxy-mobile-hotspot.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/git-with-proxy-mobile-hotspot.md) |
-| Laravel |  |
-|  | [laravel-workflow-project-creation.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-workflow-project-creation.md) |
-|  | [laravel-blade-crud-setup.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-blade-crud-setup.md) |
-|  | [laravel-vue-inertia-initial-and-project-setup.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-vue-inertia-initial-and-project-setup.md) |
-|  | [laravel-vue-inertial-crud-implementation-basics.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/laravel-vue-inertial-crud-implementation-basics.md) |
-| Databases |  |
-|  | [python-all-database-connection-setup.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/python-all-database-connection-setup.md) |
-|  | [dotenv-all-database-configuration.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/dotenv-all-database-configuration.md) |
-| MongoDB | [mongodb-authentication-create-administrator-account.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/mongodb-authentication-create-administrator-account.md) |
-| VPS |  |
-|  | [vps-cmd-setup-node-mongodb.md](https://github.com/marcuwynu23/programming-and-setup-notes/blob/main/vps-cmd-setup-node-mongodb.md) |
+- [Installation Guides](#installation-guides)
+- [Language-Specific Guides](#language-specific-guides)
+- [Examples and Exercises](#examples-and-exercises)
+- [Contributing](#contributing)
 
+## 🤝 Contributing
 
-</center>
+Contributions are welcome! If you have any suggestions, improvements, or new guides to add, feel free to contribute to this repository. Please check the [contributing guidelines](CONTRIBUTING.md) for more information.
+
+---
+
+We hope these programming setups, installation guides, and tweaks help make your programming journey smoother and more enjoyable! Happy coding!
