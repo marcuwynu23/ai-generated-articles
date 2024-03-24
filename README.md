@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Programming Setups, Installation, and Guides</h1>
+  <h1>AI Generated Articles: Programming Setups, Installation, Tech Guides, etc </h1>
 </div>
 
 <p align="center">
