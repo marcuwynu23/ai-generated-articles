@@ -7,6 +7,7 @@ Swap space acts as an overflow for your system's RAM, storing inactive memory pa
 ## 📌 Why Add Swap Space?
 
 Even if you have decent RAM, swap space helps:
+
 - Prevent system freezes or crashes when memory is full.
 - Keep inactive background apps out of RAM.
 - Enable hibernation (for desktop systems).
@@ -18,43 +19,43 @@ Even if you have decent RAM, swap space helps:
 
 ### Step 1: Create a Swap File
 
-\`\`\`bash
+```bash
 sudo fallocate -l 2G /swapfile
-\`\`\`
+```
 
-> Replace \`2G\` with your desired size (e.g., 1G, 4G, etc.)
+> Replace `2G` with your desired size (e.g., 1G, 4G, etc.)
 
 ### Step 2: Secure the File
 
-\`\`\`bash
+```bash
 sudo chmod 600 /swapfile
-\`\`\`
+```
 
 ### Step 3: Format as Swap
 
-\`\`\`bash
+```bash
 sudo mkswap /swapfile
-\`\`\`
+```
 
 ### Step 4: Enable Swap
 
-\`\`\`bash
+```bash
 sudo swapon /swapfile
-\`\`\`
+```
 
 ### Step 5: Make It Permanent
 
-Add it to your \`/etc/fstab\` so it's available on reboot:
+Add it to your `/etc/fstab` so it's available on reboot:
 
-\`\`\`bash
+```bash
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-\`\`\`
+```
 
 ---
 
 ## ⚙️ Optional: Tune Swappiness (Use RAM Before Swap)
 
-\`\`\`bash
+```bash
 # Check current swappiness (default is 60)
 cat /proc/sys/vm/swappiness
 
@@ -63,7 +64,7 @@ sudo sysctl vm.swappiness=10
 
 # Make it permanent
 echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
-\`\`\`
+```
 
 ---
 
@@ -73,37 +74,37 @@ If you no longer need the swap file, follow these steps to cleanly remove it.
 
 ### Step 1: Turn Off Swap
 
-\`\`\`bash
+```bash
 sudo swapoff /swapfile
-\`\`\`
+```
 
 ### Step 2: Delete the File
 
-\`\`\`bash
+```bash
 sudo rm /swapfile
-\`\`\`
+```
 
 ### Step 3: Remove from fstab
 
-Edit \`/etc/fstab\` to remove or comment out the swap line:
+Edit `/etc/fstab` to remove or comment out the swap line:
 
-\`\`\`bash
+```bash
 sudo nano /etc/fstab
-\`\`\`
+```
 
 Delete this line if it exists:
 
-\`\`\`
+```
 /swapfile none swap sw 0 0
-\`\`\`
+```
 
 ### Step 4: (Optional) Restore Default Swappiness
 
 If you previously set \`vm.swappiness=10\`, reset to default (usually 60):
 
-\`\`\`bash
+```bash
 sudo sysctl vm.swappiness=60
-\`\`\`
+```
 
 Or remove the entry from \`/etc/sysctl.conf\`.
 
@@ -111,14 +112,38 @@ Or remove the entry from \`/etc/sysctl.conf\`.
 
 ## 🧪 Verify Your Changes
 
-\`\`\`bash
+```bash
 free -h
-\`\`\`
+```
 
 - After adding swap, you should see it listed.
 - After removal, swap should show \`0B\`.
 
+### 📌 What's Next?
+
+#### 🔒 1. Make Swap Permanent (so it survives reboot)
+
+Run this if you haven't already:
+
+```bash
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
 ---
+
+#### ⚙️ 2. (Optional) Tune Swappiness
+
+To make your system prefer RAM and use swap **only when needed**, reduce the `swappiness` value:
+
+```bash
+# Temporarily set swappiness to 10 (default is 60)
+
+sudo sysctl vm.swappiness=10
+
+# Make it permanent across rebootsecho 'vm.
+swappiness=10' | sudo tee -a /etc/sysctl.conf
+
+```
 
 ## 🚀 Final Thoughts
 
