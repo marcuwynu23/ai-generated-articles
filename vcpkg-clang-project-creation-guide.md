@@ -36,6 +36,14 @@ winget install Microsoft.Vcpkg
 
 ### 1️⃣ Initialize a New vcpkg Project
 
+make a project folder and move inside it.
+
+```sh
+mkdir vcpkg-project && cd vcpkg-project
+```
+
+Initialize the vcpkg project
+
 ```sh
 vcpkg new --application
 ```
@@ -65,6 +73,19 @@ https://gist.github.com/marcuwynu23/ac99687142e176d6b024fe7d796907e6
 
 ### 3️⃣ Configure the Project
 
+Create `src` then create file .cpp or c
+
+```sh
+mkdir src && touch src\main.c # or src\main.cpp
+```
+
+you need also to update the CMakelists.txt
+in this part:
+
+```txt
+file(GLOB_RECURSE SOURCES "src/*.c")
+```
+
 This command will run CMake and automatically trigger vcpkg installation for any missing dependencies.
 
 ```sh
@@ -79,8 +100,67 @@ cmake --preset=default
 cmake --build build
 ```
 
+### adding dependencies
+
+if you want to add dependency for example fmt
+you use this `vcpkg add port <dependency>`:
+
+```sh
+ vcpkg add port fmt
+```
+
+then you need to run
+
+```sh
+cmake --preset=default
+```
+
+then find in log this section:
+
+```txt
+The package fmt provides CMake targets:
+```
+
+then get the below part like this:
+
+```txt
+    find_package(fmt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fmt::fmt)
+
+    # Or use the header-only version
+    find_package(fmt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fmt::fmt-header-only)
+```
+
+then add it in CMakelists.txt in `Linking External Libraries (via vcpkg)` section:
+
+after adding you can now run:
+
+```sh
+cmake --build build
+```
+
+### how to remove dependencies
+
+To remove depedency is by commentout or removing the
+part that you add in CMakelists.txt `Linking External Libraries (via vcpkg)` section:
+
+then remove in vcpkg.json:
+
+```json
+  "dependencies": [
+    "fmt" // remove this
+  ]
+```
+
+after that, run the `cmake --preset=default` and `cmake --build build`
+
 ---
 
 ## ✅ Done!
 
 You now have a functioning Clang C project with modern CMake and vcpkg integration. 🎉
+
+```
+
+```
