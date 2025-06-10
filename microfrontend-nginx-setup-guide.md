@@ -30,7 +30,7 @@ Your goal:
 ## ⚙️ Folder Structure
 
 ```text
-/var/www/test/
+/var/www/apps/
 ├── app1/
 │ ├── index.html
 │ └── assets/
@@ -49,12 +49,12 @@ Your goal:
 ```nginx
 server {
 listen 443 ssl;
-server_name test.cloudmateria.com;
+server_name apps.cloudmateria.com;
 
 ssl_certificate /etc/nginx/ssl/cloudflare.pem;
 ssl_certificate_key /etc/nginx/ssl/cloudflare.key;
 
-root /var/www/test;
+root /var/www/apps;
 
 # === App1
 
@@ -65,7 +65,7 @@ location /app1/ {
 try_files $uri $uri/ /app1/index.html;
 }
 location /app1/assets/ {
-alias /var/www/test/app1/assets/;
+alias /var/www/apps/app1/assets/;
 }
 
 # === App2
@@ -77,7 +77,7 @@ location /app2/ {
 try_files $uri $uri/ /app2/index.html;
 }
 location /app2/assets/ {
-alias /var/www/test/app2/assets/;
+alias /var/www/apps/app2/assets/;
 }
 
 # === App3
@@ -89,7 +89,7 @@ location /app3/ {
 try_files $uri $uri/ /app3/index.html;
 }
 location /app3/assets/ {
-alias /var/www/test/app3/assets/;
+alias /var/www/apps/app3/assets/;
 }
 
 # === Root fallback
@@ -108,19 +108,23 @@ return 404;
 For example, `https://test.cloudmateria.com/app1` → automatically redirected to `/app1/`.
 
 ✅ **SPA Deep Linking**  
-Each app uses:  
+Each app uses:
+
 ```nginx
 try_files $uri $uri/ /appX/index.html;
 ```
+
 This ensures **deep links** (like `/app1/dashboard`) fallback to the SPA’s entry point.
 
 ✅ **Static Asset Handling**  
-Assets like `/app1/assets/…` are served using:  
+Assets like `/app1/assets/…` are served using:
+
 ```nginx
 location /app1/assets/ {
 alias /var/www/test/app1/assets/;
 }
 ```
+
 **`alias`** ensures the correct absolute path.
 
 ---
@@ -138,14 +142,16 @@ alias /var/www/test/app1/assets/;
 
 For this to work perfectly, ensure your **build tool** (like Vite, Webpack, or CRA) uses the correct **base path**.
 
-✅ In Vite:  
+✅ In Vite:
+
 ```js
 export default defineConfig({
-base: '/app1/', // or /app2/ or /app3/
-})
+  base: "/app1/", // or /app2/ or /app3/
+});
 ```
 
-✅ In React (CRA):  
+✅ In React (CRA):
+
 ```json
 "homepage": "/app1/"
 ```
@@ -163,11 +169,14 @@ This ensures **assets like JS/CSS** are requested as `/app1/assets/…`, matchin
 - ⚡️ Blazing fast asset delivery — no broken links!
 
 **Ready to deploy?**  
-✅ Test NGINX:  
+✅ Test NGINX:
+
 ```bash
 sudo nginx -t
-```  
-✅ Reload NGINX:  
+```
+
+✅ Reload NGINX:
+
 ```bash
 sudo systemctl reload nginx
 ```
