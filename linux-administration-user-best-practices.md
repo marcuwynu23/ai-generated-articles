@@ -35,24 +35,26 @@ If someone leaves the team, you only remove their deployer access—not full roo
 Let’s assume you’re logged in as **root**:
 
 1️⃣ **Create the deployer user**:
-\`\`\`bash
+
+```bash
 adduser deployer
-\`\`\`
+```
 
 2️⃣ **Add deployer to the `sudo` group**:
-\`\`\`bash
+
+```bash
 usermod -aG sudo deployer
-\`\`\`
+```
 
 3️⃣ **Allow passwordless sudo** for seamless deployments (edit with \`visudo\`):
-\`\`\`bash
-visudo
-\`\`\`
-Add this line:
-\`\`\`
-deployer ALL=(ALL) NOPASSWD:ALL
-\`\`\`
 
+```bash
+visudo
+```
+Add this line:
+```
+deployer ALL=(ALL) NOPASSWD:ALL
+```
 ✅ Now \`deployer\` can run **any** \`sudo\` command **without a password**.
 
 ---
@@ -60,37 +62,46 @@ deployer ALL=(ALL) NOPASSWD:ALL
 ## 🔐 Configure SSH Access
 
 1️⃣ **On your local machine**, generate an SSH key if needed:
-\`\`\`bash
+
+```bash
 ssh-keygen -t ed25519 -C "deployer key"
-\`\`\`
+```
 
 2️⃣ **Copy your public key to the server**:
-\`\`\`bash
+
+```bash
 ssh-copy-id deployer@your.server.ip
-\`\`\`
+```
+
 or manually add it to:
-\`\`\`bash
+
+```bash
 /home/deployer/.ssh/authorized_keys
-\`\`\`
+```
+
 
 ---
 
 ## ⚙️ Using `deployer` Like Root
 
 Now, instead of SSHing as root:
-\`\`\`bash
+
+```bash
 ssh root@server
-\`\`\`
+```
+
 You connect as deployer:
-\`\`\`bash
+
+```bash
 ssh deployer@server
-\`\`\`
+```
 
 For privileged commands (like installing packages or restarting services):
-\`\`\`bash
+
+```bash
 sudo apt update
 sudo systemctl reload nginx
-\`\`\`
+```
 
 ✅ No password needed because of the \`NOPASSWD\` config.
 
@@ -100,7 +111,7 @@ sudo systemctl reload nginx
 
 Here’s a **sample CI/CD script** for root:
 
-\`\`\`bash
+```bash
 ssh root@server <<'EOF'
   cd /var/www/myapp
   git pull origin main
@@ -108,13 +119,13 @@ ssh root@server <<'EOF'
   npm run build
   systemctl reload nginx
 EOF
-\`\`\`
+```
 
 ---
 
 ### ✅ Updated script for deployer:
 
-\`\`\`bash
+```bash
 ssh deployer@server <<'EOF'
   cd ~/myapp
   git pull origin main
@@ -123,7 +134,8 @@ ssh deployer@server <<'EOF'
   sudo cp -r build/* /var/www/myapp/
   sudo systemctl reload nginx
 EOF
-\`\`\`
+```
+
 
 ---
 
@@ -145,7 +157,7 @@ EOF
 
 ### 🔗 Sample SSH Deployment Flow in GitHub Actions
 
-\`\`\`yaml
+```yaml
 - name: Deploy to production
   uses: appleboy/ssh-action@v1.0.0
   with:
@@ -159,22 +171,26 @@ EOF
       npm run build
       sudo cp -r build/* /var/www/myapp/
       sudo systemctl reload nginx
-\`\`\`
+```
+
 
 ---
 
 ### ✅ Summary of Commands to Transition from Root to Deployer:
 
 1️⃣ Create deployer:  
-\`\`\`bash
+```bash
 adduser deployer
 usermod -aG sudo deployer
-\`\`\`
+```
+
 
 2️⃣ Allow passwordless sudo (\`visudo\`):
-\`\`\`
+
+```
 deployer ALL=(ALL) NOPASSWD:ALL
-\`\`\`
+```
+
 
 3️⃣ Copy your SSH key to deployer.
 
