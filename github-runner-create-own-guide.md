@@ -1,4 +1,3 @@
-
 # 🔧 How to Implement and Use Your Own GitHub Runner
 
 GitHub Actions provides powerful automation directly in your repository, and by default, it uses GitHub-hosted runners. However, for projects with specific requirements, longer execution times, or custom environments, **self-hosted runners** are a great option.
@@ -10,6 +9,7 @@ In this guide, you'll learn how to **set up your own GitHub Actions runner** on 
 ## 📌 Why Use a Self-Hosted Runner?
 
 Self-hosted runners give you:
+
 - ✅ Full control over the software and hardware.
 - ✅ Faster execution by avoiding queue time.
 - ✅ Ability to use custom software, services, or Docker setups.
@@ -22,6 +22,7 @@ Self-hosted runners give you:
 ### 🔹 Step 1: Prepare Your Environment
 
 You'll need:
+
 - A machine with **Linux**, **macOS**, or **Windows** (physical or virtual).
 - Admin/root access.
 - GitHub account with access to the repository you want to use the runner for.
@@ -43,58 +44,82 @@ Select the appropriate **OS** of your runner. GitHub will provide you with a com
 Run the commands provided by GitHub. Here’s a general example for Linux:
 
 ```bash
+# Switch to the user for running the GitHub runner
+sudo -u ghrunner -i bash
+
 # Create a directory for the runner
-mkdir actions-runner && cd actions-runner
+mkdir github-runner && cd github-runner
 
 # Download the latest runner package
-curl -o actions-runner-linux-x64-2.308.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.308.0/actions-runner-linux-x64-2.308.0.tar.gz
+curl -o actions-runner-linux-x64-2.327.1.tar.gz -L https://github.com/actions/runner/releases/download/v2.327.1/actions-runner-linux-x64-2.327.1.tar.gz
+
+# Optional: Validate the hash to ensure integrity
+echo "d68ac1f500b747d1271d9e52661c408d56cffd226974f68b7dc813e30b9e0575  actions-runner-linux-x64-2.327.1.tar.gz" | shasum -a 256 -c
 
 # Extract the installer
-tar xzf ./actions-runner-linux-x64-2.308.0.tar.gz
+tar xzf ./actions-runner-linux-x64-2.327.1.tar.gz
 
 # Configure the runner
-./config.sh --url https://github.com/your-username/your-repo --token YOUR_GENERATED_TOKEN
+./config.sh --url https://github.com/wesdevteam --token YOUR_GENERATED_TOKEN --name runner --unattended --work _work
 ```
 
 Replace:
-- `your-username/your-repo` with your actual repository.
+
 - `YOUR_GENERATED_TOKEN` with the token provided during setup.
 
 ---
 
-### 🔹 Step 4: Install Dependencies
+### 🔹 Step 4: Set Up the GitHub Runner as a Service
 
-For Ubuntu/Debian:
+1. Create a systemd service for the runner to run as a background service. Use `nano` to edit the service file:
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y libicu-dev libkrb5-dev libssl-dev
+sudo nano /etc/systemd/system/github-runner.service
 ```
 
-For Node.js jobs, you may need to install Node:
+2. Add the following content to the file:
+
+```ini
+[Unit]
+Description=GitHub Runner 1
+After=network.target
+
+[Service]
+User=ghrunner
+Environment="PATH=/home/ghrunner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+WorkingDirectory=/home/ghrunner/github-runner
+ExecStart=/home/ghrunner/github-runner/run.sh
+Restart=always
+RestartSec=10
+KillMode=process
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. Reload the systemd configuration:
 
 ```bash
-sudo apt install nodejs npm
+sudo systemctl daemon-reload
+```
+
+4. Enable and start the GitHub runner service:
+
+```bash
+sudo systemctl enable github-runner.service
+sudo systemctl start github-runner.service
+```
+
+5. Check the status of the service:
+
+```bash
+sudo systemctl status github-runner.service
 ```
 
 ---
 
-### 🔹 Step 5: Start the Runner
-
-```bash
-./run.sh
-```
-
-> 💡 This starts the runner in the foreground. You can also install it as a service (recommended):
-
-```bash
-sudo ./svc.sh install
-sudo ./svc.sh start
-```
-
----
-
-## ⚙️ Use in Your Workflow
+### 🔹 Step 5: Use in Your Workflow
 
 Update your workflow file (e.g., `.github/workflows/main.yml`) to target your self-hosted runner:
 
