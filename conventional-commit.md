@@ -52,4 +52,4 @@ By using these commit types in your commit messages, you can provide additional 
 
 ## Conclusion
 
-By following the Conventional Commits specification, you can create more consistent, readable, and machine-readable Git commit messages. This can help streamline your development workflow and make it easier to generate release notes and changelogs. With the help of a tool like commitizen, getting started with Con
+By following the Conventional Commits specification, you can create more consistent, readable, and machine-readable Git commit messages. This can help streamline your development workflow and make it easier to generate release notes and changelogs. With the help of a tool like commitizen, getting started with Conventional Commit
