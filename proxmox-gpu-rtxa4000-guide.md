@@ -1,8 +1,5 @@
 # 🛠️ How to Set Up NVIDIA RTX A4000 GPU Passthrough in Proxmox VE for a Single AI VM
 
-**By:** Cloud Ocampo  
-**Updated:** July 2025
-
 ---
 
 ## 📌 Overview
@@ -71,6 +68,7 @@ lspci -nnk | grep -iA3 nvidia
 ```
 
 Example output:
+
 ```
 5f:00.0 VGA compatible controller [0300]: NVIDIA GA104GL [RTX A4000] [10de:24b0]
 5f:00.1 Audio device [0403]: NVIDIA High Definition Audio [10de:228b]
@@ -79,11 +77,13 @@ Example output:
 Now bind these to `vfio-pci`:
 
 Create:
+
 ```bash
 nano /etc/modprobe.d/vfio.conf
 ```
 
 Add:
+
 ```
 options vfio-pci ids=10de:24b0,10de:228b
 ```
@@ -99,6 +99,7 @@ nano /etc/modprobe.d/blacklist-nouveau.conf
 ```
 
 Add:
+
 ```
 blacklist nouveau
 options nouveau modeset=0
@@ -125,6 +126,7 @@ lspci -nnk | grep -A3 -i nvidia
 ```
 
 You should see:
+
 ```
 Kernel driver in use: vfio-pci
 ```
@@ -194,6 +196,7 @@ nano ~/.config/systemd/user/jupyter.service
 ```
 
 Add:
+
 ```ini
 [Unit]
 Description=Jupyter Notebook
@@ -216,12 +219,78 @@ systemctl --user enable jupyter
 systemctl --user start jupyter
 ```
 
+## How to Revert Back (Remove GPU Passthrough)
+
+If you no longer want your GPU dedicated to the VM and want to return it to the Proxmox host, follow these steps:
+
+### Remove GPU from VM Config
+
+Via Proxmox Web UI:
+
+- Go to your VM → Hardware → Select the PCI Device (GPU) → Click Remove
+  Or via CLI:
+
+```sh
+qm set <VMID> -delete hostpci0
+```
+
+Replace <VMID> with your VM number (e.g., 109 for ai-vm).
+If you want a normal virtual display back:
+
+```sh
+qm set <VMID> --vga std
+```
+
+### Unbind GPU from VFIO on the Host
+
+1. Edit /etc/modprobe.d/vfio.conf and remove or comment out:
+
+```sh
+options vfio-pci ids=10de:24b0,10de:228b
+```
+
+2. Remove the Nouveau blacklist if you want host drivers again:
+
+```sh
+rm /etc/modprobe.d/blacklist-nouveau.conf
+```
+
+3. Regenerate initramfs:
+
+```sh
+update-initramfs -u -k all
+
+```
+
+### Reboot the Proxmox Host
+
+```sh
+reboot
+```
+
+### Verify GPU is Back on Host
+
+After reboot, run:
+
+```sh
+lspci | grep -i nvidia
+
+```
+
+If the card is gone physically, you should see no NVIDIA entries.
+Your system should boot normally with no passthrough bindings left over.
+
 ---
 
 ## ✅ Conclusion
 
 You now have a fully functional AI-ready Ubuntu VM with **dedicated RTX A4000 GPU passthrough** on Proxmox VE. Perfect for:
+
 - Model training
 - Deep learning experiments
 - CUDA-based computation
 - Jupyter notebooks for AI dev
+
+```
+
+```
