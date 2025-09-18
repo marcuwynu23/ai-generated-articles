@@ -39,7 +39,22 @@ Select the appropriate **OS** of your runner. GitHub will provide you with a com
 
 ---
 
-### 🔹 Step 3: Download and Configure the Runner
+### 🔹 Step 3: Create a Dedicated Runner User (Linux)
+
+It’s best not to run the runner as `root`. Create a separate user (e.g., `ghrunner`) and give it Docker access:
+
+```bash
+# Create user
+sudo adduser --disabled-password --gecos "" ghrunner
+```
+
+# Add to docker group (if you want Docker jobs)
+
+```bash
+sudo usermod -aG docker ghrunner
+```
+
+### 🔹 Step 4: Download and Configure the Runner
 
 Run the commands provided by GitHub. Here’s a general example for Linux:
 
@@ -71,53 +86,19 @@ Replace:
 
 ### 🔹 Step 4: Set Up the GitHub Runner as a Service
 
-1. Create a systemd service for the runner to run as a background service. Use `nano` to edit the service file:
+#### Install as a service for the ghrunner user
 
 ```bash
-sudo nano /etc/systemd/system/github-runner.service
+# Install as a service for the ghrunner user
+sudo ./svc.sh install ghrunner
+
+# Start the service
+sudo ./svc.sh start
+
+# Check status
+sudo systemctl status actions.runner.<your-org-repo>.service
+
 ```
-
-2. Add the following content to the file:
-
-```ini
-[Unit]
-Description=GitHub Runner 1
-After=network.target
-
-[Service]
-User=ghrunner
-Environment="PATH=/home/ghrunner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-WorkingDirectory=/home/ghrunner/github-runner
-ExecStart=/home/ghrunner/github-runner/run.sh
-Restart=always
-RestartSec=10
-KillMode=process
-TimeoutStopSec=30
-
-[Install]
-WantedBy=multi-user.target
-```
-
-3. Reload the systemd configuration:
-
-```bash
-sudo systemctl daemon-reload
-```
-
-4. Enable and start the GitHub runner service:
-
-```bash
-sudo systemctl enable github-runner.service
-sudo systemctl start github-runner.service
-```
-
-5. Check the status of the service:
-
-```bash
-sudo systemctl status github-runner.service
-```
-
----
 
 ### 🔹 Step 5: Use in Your Workflow
 
