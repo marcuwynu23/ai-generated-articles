@@ -54,7 +54,46 @@ sudo adduser --disabled-password --gecos "" ghrunner
 sudo usermod -aG docker ghrunner
 ```
 
-### 🔹 Step 4: Download and Configure the Runner
+### 🔹 Step 4: Install Docker
+
+Most CI/CD workflows require Docker. Install it system-wide:
+
+```sh
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg lsb-release
+
+# Add Docker’s official GPG key
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# Set up the repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker Engine
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Verify
+docker --version
+```
+
+### 🔹 Step 5: (Optional) Install Node.js
+
+If your workflows use Node.js (e.g., npm ci, yarn build), install Node.js 22 system-wide:
+
+```sh
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify
+node -v   # v22.x
+npm -v    # 10.x
+```
+
+### 🔹 Step 6: Download and Configure the Runner
 
 Run the commands provided by GitHub. Here’s a general example for Linux:
 
@@ -84,7 +123,7 @@ Replace:
 
 ---
 
-### 🔹 Step 4: Set Up the GitHub Runner as a Service
+### 🔹 Step 7: Set Up the GitHub Runner as a Service
 
 #### Install as a service for the ghrunner user
 
