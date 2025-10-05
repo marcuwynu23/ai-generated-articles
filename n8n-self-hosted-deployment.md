@@ -30,7 +30,6 @@ services:
     image: docker.n8n.io/n8nio/n8n
     container_name: n8n
     restart: unless-stopped
-    network_mode: host
     environment:
       - TZ=Asia/Manila
       - DB_SQLITE_POOL_SIZE=5
@@ -41,12 +40,20 @@ services:
       - N8N_DIAGNOSTICS_ENABLED=false
       - N8N_TELEMETRY_ENABLED=false
       - N8N_DEFAULT_TIMEOUT=120000
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=strongpassword
+      - N8N_HOST=n8n.cloudmateria.com
+      - N8N_PROTOCOL=https
+      - N8N_WEBHOOK_URL=https://n8n.cloudmateria.com
+      - N8N_EDITOR_BASE_URL=https://n8n.cloudmateria.com
+      - N8N_WEBHOOK_TUNNEL_URL=https://n8n.cloudmateria.com
+      - N8N_PUBLIC_API_DISABLED=false
+      - N8N_TRUST_PROXY=true
+      - N8N_TRUSTED_PROXIES=127.0.0.1,::1
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - WEBHOOK_URL=https://n8n.cloudmateria.com
     volumes:
       - data:/home/node/.n8n
-
+    ports:
+      - "5678:5678"
 volumes:
   data:
     driver: local
@@ -116,18 +123,67 @@ sudo apt install nginx certbot python3-certbot-nginx -y
 Create a config `/etc/nginx/sites-available/n8n.conf`:
 
 ```nginx
+# Redirect all HTTP to HTTPS
 server {
     listen 80;
-    server_name n8n.example.com;
+    listen [::]:80;
+    server_name n8n.cloudmateria.com;
 
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS reverse proxy for n8n
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name n8n.cloudmateria.com;
+
+    ssl_certificate     /etc/nginx/ssl/cloudflare.pem;
+    ssl_certificate_key /etc/nginx/ssl/cloudflare.key;
+
+    client_max_body_size 100M;
+
+    # 🚫 Prevent browsers from attempting QUIC/HTTP3
+    add_header Alt-Svc "" always;
+    add_header QUIC-Status "disabled" always;
+
+    # Main n8n editor and API
     location / {
         proxy_pass http://127.0.0.1:5678;
+        proxy_http_version 1.1;
+
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection upgrade;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_cache_bypass $http_upgrade;
     }
+
+    location /webhook/ {
+        proxy_pass http://127.0.0.1:5678;
+        proxy_http_version 1.1;
+
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+
+        # proxy_buffering off;
+        # proxy_request_buffering off;
+        # proxy_cache_bypass $http_upgrade;
+    }
+
 }
+
 ```
 
 Enable it:
